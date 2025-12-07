@@ -45,7 +45,7 @@ def quest_create(request):
                     return response.Response(str(e), status=500)
             return response.Response(serializer.errors, status=400)
 
-#RESTFUL 페이지
+#RUD 페이지
 @api_view(['DELETE', 'PUT', 'PATCH'])
 def quest_fetch(request, id):
         try:
@@ -71,4 +71,4 @@ def quest_fetch(request, id):
             if serializer.is_valid():
                 serializer.save() #
                 return  response.Response(serializer.data, status=201)
-        return response.Response(status=404)
+        return response.Response(status=500)
