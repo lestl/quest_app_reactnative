@@ -30,7 +30,7 @@ export async function put_Quest(id:number, quest: Omit<Quest, 'id'>){
 }
 
 export async function patch_Quest(id:number, quest: Partial<Quest>){
-    //Partial로 해당 제네릭 객체의 모든 필드를 선택 사항으로 만들어줘 부분수정 가능하다.
+    //Partial로 해당 제네릭 객체의 모든 필드를 선택 사항으로 만들어줘 부분수정 가능하다
     const response = await axios.patch<Quest>(`${BASE_URL}/quests/${id}/`, quest);
     return response.data;
 }
