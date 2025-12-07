@@ -20,8 +20,7 @@ from api import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('read_json/', views.quest_json, name='quest_json'),
-    path('create_quest/', views.quest_create, name='quest_create'),
-    path('detail_quest/<int:id>/', views.quest_detail, name='quest_detail'),
-    path('patch_quest/<int:id>/', views.quest_fetch, name='quest_fetch')
+    #RESTFUL 규칙으로 quest/로만 이용 개편 또한 복수형으로 쓰는게 관습임 중요!
+    path('quests/', views.quest_json, name='quest_json'),
+    path('quests/<int:id>/', views.quest_fetch, name='quest_detail'),
 ]
