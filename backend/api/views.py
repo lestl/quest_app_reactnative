@@ -13,6 +13,7 @@ def quest_json(request):
             quests = quest.objects.all() # 모든 퀘스트 데이터를 가져옴 즉 수정 대상
             serializer = QuestSerializer(quests, many=True) # JSON 직렬화
             try:
+                print("업데이트버전 성공")
                 return response.Response(serializer.data, status=200)
             #200은 status 조회 OK
             except Exception as e:
