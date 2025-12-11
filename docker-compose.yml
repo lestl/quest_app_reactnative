@@ -8,6 +8,7 @@ services:
     ports:   # [수정] port -> ports
       - "3306:3306"
     environment: # [수정] envirionment -> environment
+      DB_TYPE: django.db.backends.mysql
       MYSQL_DATABASE: quest_db
       MYSQL_USER: quest_user
       MYSQL_PASSWORD: asd02048
