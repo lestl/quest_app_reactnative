@@ -18,7 +18,6 @@ import environ
 BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env(DEBUG=(bool, False))
 
-db_engine = env('DB_TYPE', default('default='django.db.backends.sqlite3''))
 
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
