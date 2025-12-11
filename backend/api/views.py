@@ -24,7 +24,7 @@ def quest_json(request):
             print(serializer)
             if serializer.is_valid():
                 try:
-                    serializer.save() # 데이터베이스에 저장
+                    serializer.save() # 데이터베이스에 저장 3
                     return response.Response(serializer.data, status=201)
                 #201은 status CREATED
                 except Exception as e:
