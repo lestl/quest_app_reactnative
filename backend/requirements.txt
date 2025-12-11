@@ -15,5 +15,6 @@ Pygments==2.19.2
 requests==2.32.5
 rich==14.2.0
 sqlparse==0.5.4
-tzdata==2025.2
 urllib3==2.5.0
+django-environ==0.10.0
+mysqlclient

@@ -1,0 +1,45 @@
+version: '3.8'  # [수정] 콜론 추가
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: quest_db_mysql
+    restart: always
+    ports:   # [수정] port -> ports
+      - "3306:3306"
+    environment: # [수정] envirionment -> environment
+      DB_TYPE: django.db.backends.mysql
+      MYSQL_DATABASE: quest_db
+      MYSQL_USER: quest_user
+      MYSQL_PASSWORD: asd02048
+      MYSQL_ROOT_PASSWORD: asd02048@
+    volumes: # [수정] environment 밖으로 꺼냄 (들여쓰기 주의)
+      - mysql_data:/var/lib/mysql
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    container_name: quest_backend
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  nginx: # [수정] 들여쓰기 밖으로 꺼냄
+    image: nginx:latest
+    container_name: quest_nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - backend
+
+volumes: # [수정] 들여쓰기 맨 앞으로 당김
+  mysql_data:
