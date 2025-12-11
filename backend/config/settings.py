@@ -18,7 +18,6 @@ import environ
 BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env(DEBUG=(bool, False))
 
-db_engine = env('DB_TYPE', default('default='django.db.backends.sqlite3''))
 
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
@@ -82,17 +81,16 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-if db_engine != 'django.db.backends.sqlite3':
-    DATABASES['default'].update({
-        'NAME': env('MYSQL_DB_NAME'),
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': env('MYSQL_DATABASE'),
         'USER': env('MYSQL_USER'),
         'PASSWORD': env('MYSQL_PASSWORD'),
-        'HOST': env('MYSQL_IP'),   # Docker에서는 서비스명 'db'가 들어옴
-        'PORT': env('MYSQL_PORT'),
-    })
-else:
-    # SQLite인 경우 경로 설정
-    DATABASES['default']['NAME'] = BASE_DIR / 'db.sqlite3'
+        'HOST': env('MYSQL_HOST'),  # docker-compose 서비스 이름 ('db')
+        'PORT': int(env('MYSQL_PORT', default=3306)),
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
