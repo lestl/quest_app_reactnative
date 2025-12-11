@@ -17,5 +17,5 @@ jobs:
       - name: Backend Redploy
         run: |
           cd /home/ubuntu/quest_project
-          # DB나 Nginx는 건드리지 않고 백엔드만 새로 빌드해서 갈아끼움
+          # DB나 Nginx는 건드리지 않고 백엔드만 새로 빌드해서 갈아끼윰
           docker compose up -d --build backend
