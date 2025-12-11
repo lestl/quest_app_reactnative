@@ -1,24 +1,29 @@
-version: '3.8'  # [수정] 콜론 추가
-
 services:
   db:
     image: mysql:8.0
     container_name: quest_db_mysql
     restart: always
-    ports:   # [수정] port -> ports
-      - "${MYSQL_PORT}:${MYSQL_PORT}"
-    environment: # [수정] envirionment -> environment
+    ports:
+      - "3308:3306"
+    environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-    volumes: # [수정] environment 밖으로 꺼냄 (들여쓰기 주의)
+    volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    restart: always
     command: >
       sh -c "python manage.py migrate &&
              python manage.py runserver 0.0.0.0:8000"
@@ -27,16 +32,17 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_PORT: ${MYSQL_PORT}
+      MYSQL_HOST: db
+      MYSQL_PORT: 3306
     volumes:
       - ./backend:/app
+    depends_on:
+      db:
+        condition: service_healthy
     ports:
       - "8000:8000"
-    depends_on:
-      - db
 
-  nginx: # [수정] 들여쓰기 밖으로 꺼냄
+  nginx:
     image: nginx:latest
     container_name: quest_nginx
     ports:
@@ -46,5 +52,5 @@ services:
     depends_on:
       - backend
 
-volumes: # [수정] 들여쓰기 맨 앞으로 당김
+volumes:
   mysql_data:

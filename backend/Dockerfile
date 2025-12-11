@@ -1,12 +1,20 @@
-FROM python:3.10
+FROM python:3.10-slim
 
-WORKDIR /app 
+WORKDIR /app
 
-RUN apt-get update && apt-get install -y gcc pkg-config default-libmysqlclient-dev  && rm -rf /var/lib/apt/lists/*
+# mysqlclient 빌드 필수 패키지 설치
+RUN apt-get update && apt-get install -y \
+    gcc \
+    default-libmysqlclient-dev \
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
+COPY requirements.txt /app/
+
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+COPY . /app/
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+EXPOSE 8000
+
+CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
